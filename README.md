@@ -1,0 +1,1 @@
+Design and implement a console-based simulation of a web browser that allows users to open, switch, and close multiple tabs, with each tab maintaining its own navigation history. The goal is to model real-world browser behavior using object-oriented programming and core data structures like stacks and linked lists,
