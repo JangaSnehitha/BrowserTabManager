@@ -14,41 +14,54 @@ public:
         currentPage = "home";
     }
 
-    void visitPage(const string& url) {
-        if (!currentPage.empty()) backStack.push(currentPage);
-        while (!forwardStack.empty()) forwardStack.pop(); // clear forward history
-        currentPage = url;
-        string command = "start " + url;
-        system(command.c_str());
-        cout << "Visited: " << url << endl;
-    }
-
-    void goBack() {
-        if (!backStack.empty()) {
-            forwardStack.push(currentPage);
-            currentPage = backStack.top();
-            backStack.pop();
-            cout << "Went back to: " << currentPage << endl;
-        } else {
-            cout << "No page to go back to.\n";
-        }
-    }
-
-    void goForward() {
-        if (!forwardStack.empty()) {
-            backStack.push(currentPage);
-            currentPage = forwardStack.top();
-            forwardStack.pop();
-            cout << "Went forward to: " << currentPage << endl;
-        } else {
-            cout << "No page to go forward to.\n";
-        }
-    }
-
-    void showCurrentPage() const {
-        cout << "Current Page: " << currentPage << endl;
-    }
+    void visitPage(const string& url);
+    void goBack();
+    void goForward();
+    void showCurrentPage() const;
 };
+
+class TabManager{
+    private:
+    vector<Tab*> tabs;
+    int currentTabIndex;
+};
+
+// Function definitions outside the class using scope resolution operator
+
+void Tab::visitPage(const string& url) {
+    if (!currentPage.empty()) backStack.push(currentPage);
+    while (!forwardStack.empty()) forwardStack.pop(); // clear forward history
+    currentPage = url;
+    string command = "start " + url;
+    system(command.c_str());
+    cout << "Visited: " << url << endl;
+}
+
+void Tab::goBack() {
+    if (!backStack.empty()) {
+        forwardStack.push(currentPage);
+        currentPage = backStack.top();
+        backStack.pop();
+        cout << "Went back to: " << currentPage << endl;
+    } else {
+        cout << "No page to go back to.\n";
+    }
+}
+
+void Tab::goForward() {
+    if (!forwardStack.empty()) {
+        backStack.push(currentPage);
+        currentPage = forwardStack.top();
+        forwardStack.pop();
+        cout << "Went forward to: " << currentPage << endl;
+    } else {
+        cout << "No page to go forward to.\n";
+    }
+}
+
+void Tab::showCurrentPage() const {
+    cout << "Current Page: " << currentPage << endl;
+}
 
 int main() {
     Tab browserTab;
