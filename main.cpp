@@ -24,6 +24,8 @@ class TabManager{
     private:
     vector<Tab*> tabs;
     int currentTabIndex;
+    int tabNo;
+    
 };
 
 // Function definitions outside the class using scope resolution operator
