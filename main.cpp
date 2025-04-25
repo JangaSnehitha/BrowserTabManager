@@ -25,6 +25,7 @@ class TabManager{
     vector<Tab*> tabs;
     int currentTabIndex;
     int tabNo;
+    string tabHistory;
     
 };
 
