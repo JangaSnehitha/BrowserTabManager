@@ -1,6 +1,7 @@
 #include<iostream>
 #include <stack>
 #include <string>
+#include<vector>
 using namespace std;
 
 class Tab {
@@ -8,6 +9,7 @@ private:
     string currentPage;
     stack<string> backStack;
     stack<string> forwardStack;
+    vector<string> history;
 
 public:
     Tab() {
@@ -18,16 +20,11 @@ public:
     void goBack();
     void goForward();
     void showCurrentPage() const;
+    void showHistory();
+
 };
 
-class TabManager{
-    private:
-    vector<Tab*> tabs;
-    int currentTabIndex;
-    int tabNo;
-    string tabHistory;
-    
-};
+
 
 // Function definitions outside the class using scope resolution operator
 
@@ -35,6 +32,7 @@ void Tab::visitPage(const string& url) {
     if (!currentPage.empty()) backStack.push(currentPage);
     while (!forwardStack.empty()) forwardStack.pop(); // clear forward history
     currentPage = url;
+    history.push_back(url);
     string command = "start " + url;
     system(command.c_str());
     cout << "Visited: " << url << endl;
@@ -66,6 +64,14 @@ void Tab::showCurrentPage() const {
     cout << "Current Page: " << currentPage << endl;
 }
 
+void Tab::showHistory()
+{
+    cout << "\n--- Browsing History ---\n";
+    for (const auto& page : history) {
+        cout << page << endl;
+    }  
+}
+
 int main() {
     Tab browserTab;
     int choice;
@@ -73,7 +79,7 @@ int main() {
 
     do {
         cout << "\n=== Browser Menu ===\n";
-        cout << "1. Visit new page\n2. Go back\n3. Go forward\n4. Show current page\n5. Exit\n";
+        cout << "1. Visit new page\n2. Go back\n3. Go forward\n4. Show current page\n5. Exit\n6. Show History\n";
         cout << "Enter choice: ";
         cin >> choice;
 
@@ -95,6 +101,9 @@ int main() {
             case 5:
                 cout << "Exiting...\n";
                 break;
+            case 6:
+                browserTab.showHistory();
+                break;    
             default:
                 cout << "Invalid choice.\n";
         }
