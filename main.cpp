@@ -24,10 +24,38 @@ public:
 
 };
 
+class tabNode{
+    public:
+        Tab* tab;
+        tabNode*next;
+        tabNode*prev;
+
+        tabNode(Tab*t)
+        {
+            tab=t;
+            next=NULL;
+            prev=NULL;
+        }
+};
 
 
+class Browser{
+      private:
+           tabNode*head;
+           tabNode*current;
+           int tabCount;
+       public:
+              Browser()
+              {
+                head=NULL;
+                current=NULL;
+                tabCount=0;
+                openNewTab();
+              } 
+              
+       void openNewTab();       
+};
 // Function definitions outside the class using scope resolution operator
-
 void Tab::visitPage(const string& url) {
     if (!currentPage.empty()) backStack.push(currentPage);
     while (!forwardStack.empty()) forwardStack.pop(); // clear forward history
@@ -71,15 +99,42 @@ void Tab::showHistory()
         cout << page << endl;
     }  
 }
+void Browser::openNewTab()
+{
+    Tab*newTab=new Tab();
+    tabNode*newNode=new tabNode(newTab);
+    if(head==NULL)
+    {
+        head=newNode;
+    }
+
+    else{
+        tabNode*temp=head;
+        while(temp->next!=NULL)
+        {
+            temp=temp->next;
+        }
+
+        temp->next=newNode;
+        newNode->prev=temp;
+    }
+        current=newNode;
+        tabCount++;
+       
+        cout<<"Opened a new Tab with tab count: "<<tabCount<<endl;
+    
+}
 
 int main() {
-    Tab browserTab;
+    
     int choice;
     string url;
+    Browser browserTab;
+
 
     do {
         cout << "\n=== Browser Menu ===\n";
-        cout << "1. Visit new page\n2. Go back\n3. Go forward\n4. Show current page\n5. Exit\n6. Show History\n";
+        cout << "1. Visit new page\n2. Go back\n3. Go forward\n4. Show current page\n5. Exit\n6. Show History\n7. Open New Tab\n";
         cout << "Enter choice: ";
         cin >> choice;
 
@@ -103,7 +158,10 @@ int main() {
                 break;
             case 6:
                 browserTab.showHistory();
-                break;    
+                break; 
+            case 7:
+                browserTab.openNewTab();
+                break;       
             default:
                 cout << "Invalid choice.\n";
         }
