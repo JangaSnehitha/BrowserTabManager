@@ -12,7 +12,8 @@ private:
     vector<string> history;
 
 public:
-    Tab() {
+    Tab() 
+    {
         currentPage = "home";
     }
 
@@ -53,12 +54,16 @@ class Browser{
                 openNewTab();
               } 
               
-       void openNewTab();       
+       void openNewTab();  
+       void closeCurrentTab(); 
+       void showAllTabs();  
+       void switchToTab(); 
 };
-// Function definitions outside the class using scope resolution operator
-void Tab::visitPage(const string& url) {
+
+void Tab::visitPage(const string& url) 
+{
     if (!currentPage.empty()) backStack.push(currentPage);
-    while (!forwardStack.empty()) forwardStack.pop(); // clear forward history
+    while (!forwardStack.empty()) forwardStack.pop(); 
     currentPage = url;
     history.push_back(url);
     string command = "start " + url;
@@ -66,36 +71,44 @@ void Tab::visitPage(const string& url) {
     cout << "Visited: " << url << endl;
 }
 
-void Tab::goBack() {
-    if (!backStack.empty()) {
+void Tab::goBack() 
+{
+    if (!backStack.empty()) 
+    {
         forwardStack.push(currentPage);
         currentPage = backStack.top();
         backStack.pop();
         cout << "Went back to: " << currentPage << endl;
-    } else {
+    } else 
+    {
         cout << "No page to go back to.\n";
     }
 }
 
-void Tab::goForward() {
-    if (!forwardStack.empty()) {
+void Tab::goForward()
+ {
+    if (!forwardStack.empty()) 
+    {
         backStack.push(currentPage);
         currentPage = forwardStack.top();
         forwardStack.pop();
         cout << "Went forward to: " << currentPage << endl;
-    } else {
+    } else 
+    {
         cout << "No page to go forward to.\n";
     }
 }
 
-void Tab::showCurrentPage() const {
+void Tab::showCurrentPage() 
+{
     cout << "Current Page: " << currentPage << endl;
 }
 
 void Tab::showHistory()
 {
-    cout << "\n--- Browsing History ---\n";
-    for (const auto& page : history) {
+    cout << "\n   Browsing History   \n";
+    for (const auto& page : history) 
+    {
         cout << page << endl;
     }  
 }
@@ -125,16 +138,82 @@ void Browser::openNewTab()
     
 }
 
-int main() {
+void Browser::closeCurrentTab()
+{
+    if(current==NULL)
+    {
+        cout<<"no tab to close"<<endl;
+        return;
+    }
+
+    tabNode*toDelete=current;
+
+    if(current->prev) current->prev->next=current->next;
+    else head=current->next;
+
+    if(current->next) current->next->prev=current->prev;
+
+    if(current->next) current=current->next;
+    else current=current->prev;
+
+    delete toDelete->Tab;
+    delete toDelete;
+}
+
+void Browser::showAllTabs()
+{
+    tabNode*temp=head;
+    int idx=1;
+
+    cout<<"  Tabs  \n";
+
+    while(temp)
+    {
+        cout<<idx<<(temp=current?"[current]":" ");
+
+        temp=temp->next;
+        idx++;
+    }
+}
+void Browser::switchToTab(int tabNumber)
+{
+  if(tabNumber<=0||tabNumber>tabCount)
+  {
+    cout<<"Invalid tab number \n";
+    return;
+  }
+
+  tabNode*temp=head;
+  int idx=1;
+  while(temp&&idx!=tabNumber)
+  {
+    temp=temp->next;
+    idx++;
+  }
+  current=temp;
+  cout<<"Switched to tab number: "<<tabNumber<<endl;
+}
+
+
+int main() 
+{
     
-    int choice;
+    int choice,tabNumber;
     string url;
-    Browser browserTab;
+    Browser browser;
 
 
     do {
-        cout << "\n=== Browser Menu ===\n";
-        cout << "1. Visit new page\n2. Go back\n3. Go forward\n4. Show current page\n5. Exit\n6. Show History\n7. Open New Tab\n";
+        cout << "\n   Browser Menu   \n";
+        cout << "1. Visit new page\n";
+        cout<<"2. Go back\n";
+        cout<<"3. Go forward\n";
+        cout<<"4. Show current page\n";
+        cout<<"5. Exit\n6. Show History\n";
+        cout<<"7. Open New Tab\n";
+        cout<<"8. Close the current\n";
+        cout<<"9. Show all tabs\n";
+        cout<<"10. Switch to tab \n";
         cout << "Enter choice: ";
         cin >> choice;
 
@@ -142,26 +221,37 @@ int main() {
             case 1:
                 cout << "Enter URL: ";
                 cin >> url;
-                browserTab.visitPage(url);
+                browser.visitPage(url);
                 break;
             case 2:
-                browserTab.goBack();
+                browser.goBack();
                 break;
             case 3:
-                browserTab.goForward();
+                browser.goForward();
                 break;
             case 4:
-                browserTab.showCurrentPage();
+                browser.showCurrentPage();
                 break;
             case 5:
                 cout << "Exiting...\n";
                 break;
             case 6:
-                browserTab.showHistory();
+                browser.showHistory();
                 break; 
             case 7:
-                browserTab.openNewTab();
-                break;       
+                browser.openNewTab();
+                break;
+            case 8:
+                browser.closeCurrentTab();
+                break;
+            case 9:
+                browser.showAllTabs();
+                break;  
+            case 10:
+                cout<<"Enter tab number: ";
+                cin<<tabNumber;
+                browser.switchToTab(tabNumber);
+                break;                 
             default:
                 cout << "Invalid choice.\n";
         }
