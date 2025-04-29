@@ -57,7 +57,12 @@ class Browser{
        void openNewTab();  
        void closeCurrentTab(); 
        void showAllTabs();  
-       void switchToTab(); 
+       void switchToTab(int tabNumber); 
+       void visitPage(const string& url);
+       void goBack();
+       void goForward();
+       void showCurrentPage() const;
+       void showHistory();
 };
 
 void Tab::visitPage(const string& url) 
@@ -99,7 +104,7 @@ void Tab::goForward()
     }
 }
 
-void Tab::showCurrentPage() 
+void Tab::showCurrentPage() const 
 {
     cout << "Current Page: " << currentPage << endl;
 }
@@ -156,7 +161,7 @@ void Browser::closeCurrentTab()
     if(current->next) current=current->next;
     else current=current->prev;
 
-    delete toDelete->Tab;
+    delete toDelete->tab;
     delete toDelete;
 }
 
@@ -169,7 +174,7 @@ void Browser::showAllTabs()
 
     while(temp)
     {
-        cout<<idx<<(temp=current?"[current]":" ");
+        cout<<idx<<(temp==current?"[current]":" ")<<endl;
 
         temp=temp->next;
         idx++;
@@ -194,6 +199,30 @@ void Browser::switchToTab(int tabNumber)
   cout<<"Switched to tab number: "<<tabNumber<<endl;
 }
 
+void Browser::visitPage(const string &url)
+{
+    if(current) current->tab->visitPage(url);
+}
+
+void Browser::goBack()
+{
+    if(current) current->tab->goBack();
+}
+
+void Browser::goForward()
+{
+    if(current) current->tab->goForward();
+}
+
+void Browser::showCurrentPage()
+{
+    if(current) current->tab->showCurrentPage();
+} 
+
+void Browser::showHistory()
+{
+    if(current) current->tab->showHistory();
+}
 
 int main() 
 {
@@ -249,7 +278,7 @@ int main()
                 break;  
             case 10:
                 cout<<"Enter tab number: ";
-                cin<<tabNumber;
+                cin>>tabNumber;
                 browser.switchToTab(tabNumber);
                 break;                 
             default:
